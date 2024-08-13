@@ -216,23 +216,14 @@ public enum OfflineCache {
      */
     private void setupURLStreamHandlerFactory() {
         if (!urlStreamHandlerFactoryIsInitialized) {
-            final String msg;
             try {
                 URL.setURLStreamHandlerFactory(new CachingURLStreamHandlerFactory(this));
                 urlStreamHandlerFactoryIsInitialized = true;
-                return;
             } catch (final Error e) {
-                msg = "cannot setup URLStreamFactoryHandler, it is already set in this application. " + e.getMessage();
-                if (logger.isErrorEnabled()) {
-                    logger.error(msg);
-                }
+                throw new IllegalStateException("cannot setup URLStreamFactoryHandler, it is already set in this application.", e);
             } catch (final SecurityException e) {
-                msg = "cannot setup URLStreamFactoryHandler. " + e.getMessage();
-                if (logger.isErrorEnabled()) {
-                    logger.error(msg);
-                }
+                throw new IllegalStateException("cannot setup URLStreamFactoryHandler.",e);
             }
-            throw new IllegalStateException(msg);
         }
     }
 
